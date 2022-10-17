@@ -34,4 +34,6 @@ npm run start
 
 ### Docker
 
-TODO
+```
+docker run --env EBECO_USERNAME=your@email.com --env EBECO_PASSWORD=your-password --env PRICE_LIMIT=100 --env PRICE_AREA=SN3 ghcr.io/khromov/ebeco-electricity-price-automation/ebeco-electricity-price-automation:latest
+```
