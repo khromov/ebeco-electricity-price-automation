@@ -14,7 +14,7 @@ Set environment variables by creating the file `.env` and populating it with:
 EBECO_USERNAME=your@email.com # The email you use in the Ebeco Connect app
 EBECO_PASSWORD=your-password # The password you use in the Ebeco Connect app
 EBECO_DEVICE=ThermostatName # Optional, first thermostat will be used if not set
-PRICE_LIMIT=100 # In öre. Default 100
+PRICE_LIMIT=100 # In öre. Default 100. Note that this price is without VAT and other fees.
 PRICE_AREA=SN3 # SN1-4
 ```
 
