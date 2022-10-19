@@ -120,6 +120,6 @@ const runLogic = async() => {
 
 // Cron job
 Cron('0 * * * *', async () => {
-	console.log('Running on schedule:', new Date());
+    console.log('Running on schedule:', new Date());
     await runLogic();
 });
