@@ -2,6 +2,13 @@ A simple automation that connects to the [Ebeco Connect API](https://www.ebeco.c
 
 Uses code from https://github.com/dhutchison/homebridge-ebeco
 
+## Example
+
+Example of running this application via the [Docker image](https://github.com/khromov/ebeco-electricity-price-automation/pkgs/container/ebeco-electricity-price-automation%2Febeco-electricity-price-automation). The logic runs on a hourly schedule.
+
+![ebeco](https://user-images.githubusercontent.com/1207507/197240888-4b469770-6443-4c07-96cc-b60526f85f4a.png)
+
+
 ## Setup
 
 ```bash
