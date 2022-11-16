@@ -109,7 +109,11 @@ const isPriceLowEnoughToRunHeating = async () => {
 const runLogic = async() => {
     const priceAcceptable = await isPriceLowEnoughToRunHeating();
     if(typeof priceAcceptable === 'boolean') {
-        await updateThermostat(priceAcceptable);
+        try {
+            await updateThermostat(priceAcceptable);
+        } catch(e) {
+            console.log("Error: Ebeco service was down.")
+        }
     } else {};
 }
 
