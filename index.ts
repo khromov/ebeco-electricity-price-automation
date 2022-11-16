@@ -112,7 +112,7 @@ const runLogic = async() => {
         try {
             await updateThermostat(priceAcceptable);
         } catch(e) {
-            console.log("Error: Ebeco service was down.")
+            console.log("Error: Ebeco service was down.", e)
         }
     } else {};
 }
