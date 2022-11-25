@@ -10,7 +10,7 @@ FROM node:18-alpine
 
 ARG TZ=Europe/Stockholm
 
-RUN apk add --update-cache curl tzdata ncdu && rm -rf /var/cache/apk/*
+RUN apk add --update-cache curl tzdata && rm -rf /var/cache/apk/*
 RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /usr/src/app
