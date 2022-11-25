@@ -23,6 +23,7 @@ EBECO_PASSWORD=your-password # The password you use in the Ebeco Connect app
 EBECO_DEVICE=ThermostatName # Optional, first thermostat will be used if not set
 PRICE_LIMIT=100 # In öre. Default 100. Note that this price is without VAT and other fees.
 PRICE_AREA=SN3 # SN1-4
+PRICE_SOURCE=vattenfall # Which API to use to get the current price. Options: vattenfall | aftonbladet
 ```
 
 Start:

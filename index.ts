@@ -1,13 +1,13 @@
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import isNumber from 'is-number';
-import sub from 'date-fns/sub';
-import add from 'date-fns/add';
+import { getCurrentPriceVattenFall, getCurrentPriceAftonbladet } from './lib/utils';
+import type { Area } from './lib/types/utils';
 
 dotenv.config();
 
 import { EbecoApi } from './lib/ebecoApi';
-import axios from 'axios';
 import Cron from 'croner';
+
 
 if(!process.env.EBECO_USERNAME || !process.env.EBECO_PASSWORD) {
     throw new Error('EBECO_USERNAME or EBECO_PASSWORD env vars not set.')
@@ -62,52 +62,30 @@ const updateThermostat = async (newState: boolean) => {
     }
 }
 
-const toSwedishLocaleDateString = (date: Date): string => {
-    return date.toLocaleString('sv-SE').split(' ')[0]; // 🤷‍♀️
-}
 
-const isPriceLowEnoughToRunHeating = async () => {
 
+const isPriceLowEnoughToRunHeating = async (): Promise<Boolean | null> => {
+    
+    const priceSource = process.env.PRICE_SOURCE || 'vattenfall';
     const area = process.env.PRICE_AREA || 'SN3';
+    
+    const priceFunction = priceSource === 'aftonbladet' ? getCurrentPriceAftonbladet : getCurrentPriceVattenFall;
 
-    const today = new Date();
+    const acceptablePrice = parseInt(process.env.PRICE_LIMIT || '100');
+    const currentPrice = await priceFunction(area as Area);
 
-    const yesterday = sub(new Date(today), { days: 1 });
-    const tomorrow = add(new Date(today), { days: 1});
+    console.log('Current price =', currentPrice, 'max acceptable price =', acceptablePrice);
 
-    const todayDateIso = toSwedishLocaleDateString(today);
-    const yesterdayDateIso = toSwedishLocaleDateString(yesterday);
-    const tomorrowDateIso = toSwedishLocaleDateString(tomorrow);
-
-    console.log(`Getting dates from Vattenfall: ${yesterdayDateIso}:${tomorrowDateIso}:${area}`);
-
-    try {
-        const responseVattenfall = await axios.get(`https://www.vattenfall.se/api/price/spot/pricearea/${yesterdayDateIso}/${tomorrowDateIso}/${area}`, {
-           headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
-           }
-        });
-
-        const hourlyData = responseVattenfall.data || {};
-        const currentHour = hourlyData.find((hour: any) => todayDateIso === hour?.TimeStampDay && today.getHours() ===  new Date(hour?.TimeStamp).getHours());
-        const currentPrice = currentHour?.Value || null;
-
-        const acceptablePrice = parseInt(process.env.PRICE_LIMIT || '100');
-
-        console.log('Current price =', currentPrice, 'max acceptable price =', acceptablePrice);
-        if(isNumber(currentPrice)) {
-            if(currentPrice <= acceptablePrice) {
-                return true;
-            } else {
-                console.log("Price is too high!");
-                return false;
-            }
+    if(!isNumber(currentPrice)) {
+        console.log('Error when fetching price.');
+        return null;
+    } else {
+        if(currentPrice <= acceptablePrice) {
+            return true;
         } else {
-            console.warn('Could not get price, aborting');
-            return null;
+            console.log("Price is too high!");
+            return false;
         }
-    } catch(e) { 
-        console.error(`Can't fetch data from Vattenfall`, e);
     }
 }
 

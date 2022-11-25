@@ -12,7 +12,7 @@ export enum TemperatureSensor {
 /**
  * Interface which defines the fields that can be expected in our Platform Config. 
  */
-export interface EbecoPlatformConfig extends PlatformConfig {
+export interface EbecoPlatformConfig {
 
     /**
      * User's username for the Ebeco platform

@@ -1,0 +1,1 @@
+export type Area = 'SN1' | 'SN2' | 'SN3' | 'SN4';
