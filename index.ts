@@ -82,7 +82,12 @@ const isPriceLowEnoughToRunHeating = async () => {
     console.log(`Getting dates from Vattenfall: ${yesterdayDateIso}:${tomorrowDateIso}:${area}`);
 
     try {
-        const responseVattenfall = await axios.get(`https://www.vattenfall.se/api/price/spot/pricearea/${yesterdayDateIso}/${tomorrowDateIso}/${area}`);
+        const responseVattenfall = await axios.get(`https://www.vattenfall.se/api/price/spot/pricearea/${yesterdayDateIso}/${tomorrowDateIso}/${area}`, {
+           headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
+           }
+        });
+
         const hourlyData = responseVattenfall.data || {};
         const currentHour = hourlyData.find((hour: any) => todayDateIso === hour?.TimeStampDay && today.getHours() ===  new Date(hour?.TimeStamp).getHours());
         const currentPrice = currentHour?.Value || null;
